@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Register custom REST API routes.
  */
@@ -24,7 +23,6 @@ add_action(
                 'description' => 'String representing a valid WordPress page slug',
             ]
         );
-
         // Register routes
         register_rest_route('postlight/v1', '/posts', [
             'methods' => 'GET',
@@ -38,7 +36,6 @@ add_action(
                 ),
             ],
         ]);
-
         register_rest_route('postlight/v1', '/page', [
             'methods' => 'GET',
             'callback' => 'rest_get_page',
@@ -51,12 +48,12 @@ add_action(
                 ),
             ],
         ]);
-        register_rest_route('postlight/v1', '/page/services', [
+        register_rest_route('postlight/v1', '/services', [
             'methods' => 'GET',
-            'callback' => 'rest_get_page_services',
+            'callback' => 'rest_get_services',
             'args' => [
                 'slug' => array_merge(
-                    $post_slug_arg,
+                    $page_slug_arg,
                     [
                         'required' => true,
                     ]
@@ -93,7 +90,6 @@ add_action(
         ]);
     }
 );
-
 /**
  * Respond to a REST API request to get post data.
  *
@@ -104,7 +100,6 @@ function rest_get_post(WP_REST_Request $request)
 {
     return rest_get_content($request, 'post', __FUNCTION__);
 }
-
 /**
  * Respond to a REST API request to get page data.
  *
@@ -115,7 +110,22 @@ function rest_get_page(WP_REST_Request $request)
 {
     return rest_get_content($request, 'page', __FUNCTION__);
 }
+/**
+ * Respond to a REST API request to get post or page data.
+ * * Handles changed slugs
+ * * Doesn't return posts whose status isn't published
+ * * Redirects to the admin when an edit parameter is present
+ *
+ * @param WP_REST_Request $request Request
+ * @param str             $type Type
+ * @param str             $function_name Function name
+ * @return WP_REST_Response
+ */
 
+function rest_get_services(WP_REST_Request $request)
+{
+    return rest_get_content($request, 'page', __FUNCTION__);
+}
 /**
  * Respond to a REST API request to get post or page data.
  * * Handles changed slugs
@@ -134,7 +144,7 @@ function rest_get_content(WP_REST_Request $request, $type, $function_name)
         [
             'post',
             'page',
-
+            'services'
         ],
         true
     );
@@ -152,7 +162,6 @@ function rest_get_content(WP_REST_Request $request, $type, $function_name)
             ]
         );
     };
-
     // Shortcut to WP admin page editor
     $edit = $request->get_param('edit');
     if ('true' === $edit) {
@@ -162,10 +171,8 @@ function rest_get_content(WP_REST_Request $request, $type, $function_name)
     $controller = new WP_REST_Posts_Controller('post');
     $data = $controller->prepare_item_for_response($post, $request);
     $response = $controller->prepare_response_for_collection($data);
-
     return new WP_REST_Response($response);
 }
-
 /**
  * Returns a post or page given a slug. Returns false if no post matches.
  *
@@ -180,7 +187,6 @@ function get_content_by_slug($slug, $type = 'post')
         [
             'post',
             'page',
-
         ],
         true
     );
@@ -193,10 +199,8 @@ function get_content_by_slug($slug, $type = 'post')
         'post_status' => 'publish',
         'numberposts' => 1,
     ];
-
     // phpcs:ignore WordPress.VIP.RestrictedFunctions.get_posts_get_posts
     $post_search_results = get_posts($args);
-
     if (!$post_search_results) { // Maybe the slug changed
         // check wp_postmeta table for old slug
         $args = [
@@ -217,7 +221,6 @@ function get_content_by_slug($slug, $type = 'post')
     }
     return false;
 }
-
 /**
  * Respond to a REST API request to get a post's latest revision.
  * * Requires a valid _wpnonce on the query string
@@ -229,7 +232,6 @@ function get_content_by_slug($slug, $type = 'post')
  */
 function rest_get_post_preview(WP_REST_Request $request)
 {
-
     $post_id = $request->get_param('id');
     // Revisions are drafts so here we remove the default 'publish' status
     remove_action('pre_get_posts', 'set_default_status_to_publish');
@@ -258,5 +260,3 @@ function rest_get_post_preview(WP_REST_Request $request)
     $response = $controller->prepare_response_for_collection($data);
     return new WP_REST_Response($response);
 }
-
-

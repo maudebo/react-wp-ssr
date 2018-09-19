@@ -9,7 +9,7 @@
 # Database: react-wp-ssr
 # Generation Time: 2018-08-27 19:02:51 +0000
 # ************************************************************
-
+USE `react-wp-ssr`;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;

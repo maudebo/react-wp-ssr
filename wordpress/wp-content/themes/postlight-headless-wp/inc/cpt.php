@@ -28,7 +28,7 @@ function service()
             'rewrite' => array('slug' => 'service', 'with_front' => false),
             'menu_position' => 30,
             'show_in_rest' => true,
-            'rest_base' => 'services',
+            'rest_base' => 'service',
             'rest_controller_class' => 'WP_REST_Posts_Controller',
             'taxonomies' => array('post_tag'),
             'supports' => array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments'),

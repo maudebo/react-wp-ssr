@@ -19,6 +19,18 @@ function celestial_register_fields()
             return get_field('titre');
         }
     ));
+
+    register_rest_field('a-propos', 'titre', array(
+        'get_callback' => function ($post) {
+            return get_field('titre');
+        }
+    ));
+
+    register_rest_field('a-propos', 'description', array(
+        'get_callback' => function ($post) {
+            return get_field('description');
+        }
+    ));
 }
 
 

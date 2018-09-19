@@ -27,7 +27,7 @@ class Menu extends Component {
       }
       const slug = this.getSlug(item.url);
       const actualPage = item.object; // === 'category' ? 'category' : 'post';
-      console.log(item.object);
+      
       return (
         <Link
           as={`/${slug}`}

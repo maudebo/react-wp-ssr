@@ -36,9 +36,21 @@ app
 
     server.get('/services', (req, res) => {
       const actualPage = '/services';
-      const queryParams = { slug: 'services', apiRoute: 'page' };
+      const queryParams = {  slug: req.params.slug, apiRoute: 'services' };
       app.render(req, res, actualPage, queryParams);
     });
+    server.get('/services/:slug', (req, res) => {
+      const actualPage = '/services';
+      const queryParams = { slug: req.params.slug, apiRoute: 'services/:slug' };
+      app.render(req, res, actualPage, queryParams);
+    });
+    server.get('/a-propos', (req, res) => {
+      const actualPage = '/a-propos';
+      const queryParams = {  slug: req.params.slug, apiRoute: 'a-propos' };
+      app.render(req, res, actualPage, queryParams);
+    });
+
+
     server.get('*', (req, res) => {
       return handle(req, res);
     });

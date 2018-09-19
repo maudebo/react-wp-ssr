@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import fetch from 'isomorphic-unfetch';
 import Error from 'next/error';
 import PageWrapper from '../components/PageWrapper.js';
+import ServiceList from "./service-list";
+
 import Menu from '../components/Menu.js';
 import { Config } from '../config.js';
 
@@ -10,10 +12,11 @@ class Services extends Component {
   static async getInitialProps(context) {
     const { slug, apiRoute } = context.query;
     const res = await fetch(
-      `${Config.apiUrl}/wp-json/postlight/v1/${apiRoute}?slug=${slug}`
+      `${Config.apiUrl}/wp-json/postlight/v1/${apiRoute}`
     );
-    const post = await res.json();
-    return { post };
+    console.log(`${Config.apiUrl}/wp-json/postlight/v1/${apiRoute}?slug=${slug}`)
+    const services = await res.json();
+    return { services };
   }
 
   render() {
@@ -21,13 +24,11 @@ class Services extends Component {
     return (
       <Layout>
         <Menu menu={this.props.headerMenu} />
-        <h1>{this.props.post ? this.props.post.title.rendered : ''}</h1>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: this.props.post ? this.props.post.content.rendered : '',
-          }}
-        />
-        <div>{this.props.post.acf.titre}</div>
+
+        <div>{this.props.services.acf && this.props.services.acf.titre}</div>
+        <div>{this.props.services.acf && this.props.services.acf.description}</div>
+        <ServiceList service={this.props.service} />
+
       </Layout>
     );
   }

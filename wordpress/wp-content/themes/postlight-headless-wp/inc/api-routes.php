@@ -51,21 +51,34 @@ add_action(
                 ),
             ],
         ]);
-        register_rest_route('postlight/v1', '/page/services', [
+        register_rest_route('postlight/v1', '/services', [
             'methods' => 'GET',
-            'callback' => 'rest_get_page_services',
+            'callback' => 'rest_get_services',
             'args' => [
                 'slug' => array_merge(
-                    $post_slug_arg,
+                    $page_slug_arg,
                     [
-                        'required' => true,
+                        'required' => false,
                     ]
                 ),
             ],
         ]);
-        register_rest_route('postlight/v1', '/post/service', [
+
+        register_rest_route('postlight/v1', '/a-propos', [
             'methods' => 'GET',
-            'callback' => 'rest_get_post_service',
+            'callback' => 'rest_get_a_propos',
+            'args' => [
+                'slug' => array_merge(
+                    $page_slug_arg,
+                    [
+                        'required' => false,
+                    ]
+                ),
+            ],
+        ]);
+        register_rest_route('postlight/v1', '/services/service', [
+            'methods' => 'GET',
+            'callback' => 'rest_get_services_service',
             'args' => [
                 'slug' => array_merge(
                     $post_slug_arg,
@@ -94,16 +107,7 @@ add_action(
     }
 );
 
-/**
- * Respond to a REST API request to get post data.
- *
- * @param WP_REST_Request $request Request.
- * @return WP_REST_Response
- */
-function rest_get_post(WP_REST_Request $request)
-{
-    return rest_get_content($request, 'post', __FUNCTION__);
-}
+
 
 /**
  * Respond to a REST API request to get page data.
@@ -127,6 +131,45 @@ function rest_get_page(WP_REST_Request $request)
  * @param str             $function_name Function name
  * @return WP_REST_Response
  */
+
+function rest_get_services(WP_REST_Request $request)
+{
+    return rest_get_content($request, 'services', __FUNCTION__);
+}
+
+/**
+ * Respond to a REST API request to get page data.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+
+
+function rest_get_services_service(WP_REST_Request $request)
+{
+    return rest_get_content($request, 'services_service', __FUNCTION__);
+}
+
+ /**
+ * Respond to a REST API request to get post data.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+
+function rest_get_a_propos(WP_REST_Request $request)
+{
+    return rest_get_content($request, 'a-propos', __FUNCTION__);
+}
+
+/**
+ * Respond to a REST API request to get page data.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response
+ */
+
+
 function rest_get_content(WP_REST_Request $request, $type, $function_name)
 {
     $content_in_array = in_array(
@@ -134,6 +177,9 @@ function rest_get_content(WP_REST_Request $request, $type, $function_name)
         [
             'post',
             'page',
+            'a-propos',
+            'services',
+            'service'
 
         ],
         true
@@ -180,6 +226,9 @@ function get_content_by_slug($slug, $type = 'post')
         [
             'post',
             'page',
+            'a-propos',
+            'services', 
+            'service'
 
         ],
         true
